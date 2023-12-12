@@ -5,7 +5,7 @@
             <field name="name">estate.property.offer.tree</field>
             <field name="model">estate.property.offer</field>
             <field name="arch" type="xml">
-                <tree>
+                <tree decoration-success="status == 'accepted'" decoration-danger="status == 'refused'">
                     <field name="price"/>
                     <field name="status"/>
                     <field name="partner_id"/>
@@ -33,7 +33,7 @@
                             <group>
                                 <field name="validity"/>
                                 <field name="deadline"/>
-                                <field name="creation_date"/>
+                                <field name="creation_date" readonly="1"/>
                             </group>
                         </group>
                     </sheet>

@@ -27,7 +27,13 @@ class PropertyOffer(models.Model):
     property_id = fields.Many2one('estate.property', string="Property")
     validity = fields.Integer(string="Validity")
     deadline = fields.Date(string="Deadline", compute="_compute_deadline", inverse="_inverse_deadline")
-    creation_date = fields.Date(string="Creation Date")
+
+    # Decorator @api.model
+    @api.model
+    def _set_create_date(self):
+        return fields.Date.today()
+
+    creation_date = fields.Date(string="Creation Date", default=_set_create_date)
 
     # _sql_constraints = [
     #     # SQL Constraints structure: name, condition, message-to-return
@@ -52,31 +58,55 @@ class PropertyOffer(models.Model):
                 rec.validity = False
 
     # Decorator e.g. 4
-    # We don't want 'validity' to have a negative value.
+    # Prevent 'validity' being a negative value.
     @api.constrains("validity")
     def _check_validity(self):
         for rec in self:
             if rec.deadline <= rec.creation_date:
                 raise ValidationError(_("Deadline cannot be before creation date."))
 
-    def write(self, vals):
-        return super(PropertyOffer, self).write(vals)
+    # Accepts offer
+    def action_accept_offer(self):
+        if self.property_id:
+            self._validate_accepted_offer()
+            self.property_id.write({
+                'selling_price': self.price,
+                'state': 'accepted',
+            })
+        self.status = 'accepted'
+
+    def _validate_accepted_offer(self):
+        offer_ids = self.env['estate.property.offer'].search([
+            ('property_id', '=', self.property_id.id),
+            ('status', '=', 'accepted'),
+        ])
+        if offer_ids:
+            raise ValidationError("You have already accepted an offer.")
 
 
-    # Decorator e.g. 3
-    @api.model_create_multi
-    def create(self, vals):
-        # vals - a list of dictionaries or single dictionary
-        for rec in vals:
-            if not rec.get('creation_date'):
-                rec['creation_date'] = fields.Date.today()
-        return super(PropertyOffer, self).create(vals)
+    # Refuse offer
+    def action_decline_offer(self):
+        self.status = 'refused'
+        # print(all(self.property_id.offer_ids.mapped('status')))
+        if all(self.property_id.offer_ids.mapped('status')):
+            self.property_id.write({
+                'selling_price': 0,
+                'state': 'received',
+            })
 
 
-    # Decorator e.g. 2
-    # @api.model
-    # def _set_create_date(self):
-    #     return fields.Date.today()
+    # def write(self, vals):
+    #     return super(PropertyOffer, self).write(vals)
+
+
+    # # Decorator e.g. 3
+    # @api.model_create_multi
+    # def create(self, vals):
+    #     # vals - a list of dictionaries or single dictionary
+    #     for rec in vals:
+    #         if not rec.get('creation_date'):
+    #             rec['creation_date'] = fields.Date.today()
+    #     return super(PropertyOffer, self).create(vals)
 
     # Decorator e.g. 1
     # @api.autovacuum

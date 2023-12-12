@@ -20,8 +20,8 @@ class Property(models.Model):
     postcode = fields.Char(string="Postcode")
     date_availability = fields.Date(string="Available From")
     expected_price = fields.Float(string="Expected Price")
-    best_offer = fields.Float(string="Best Offer")
-    selling_price = fields.Float(string="Selling Price")
+    best_offer = fields.Float(string="Best Offer", compute="_compute_best_price")
+    selling_price = fields.Float(string="Selling Price", readonly=True)
     bedrooms = fields.Integer(string="Bedrooms")
     living_area = fields.Integer(string="Living Area(sqm)")
     facades = fields.Integer(string="Facades")
@@ -62,6 +62,21 @@ class Property(models.Model):
     def action_cancel(self):
         self.state = 'canceled'
 
+    @api.depends('offer_ids')
+    def _compute_offer_count(self):
+        for rec in self:
+            self.offer_count = len(rec.offer_ids)
+
+    offer_count = fields.Integer(string="Offer Count", compute=_compute_offer_count)
+
+    @api.depends('offer_ids')
+    def _compute_best_price(self):
+        for rec in self:
+            if rec.offer_ids:
+                rec.best_offer = max(rec.offer_ids.mapped('price'))
+            else:
+                rec.best_offer = 0
+
 
 
 class PropertyType(models.Model):
@@ -70,8 +85,9 @@ class PropertyType(models.Model):
 
     name = fields.Char(string="Name", required=True)
 
-class PropertyType(models.Model):
+class PropertyTag(models.Model):
     _name = "estate.property.tag"
     _description = "Property Tag"
 
     name = fields.Char(string="Name", required=True)
+    color = fields.Integer(string="Color")
