@@ -52,7 +52,7 @@ class Property(models.Model):
     # Note: Onchange is triggered within the form view.
     @api.onchange('living_area', 'garden_area')
     def _onchange_total_are(self):
-            self.total_are = self.living_area + self.garden_area
+        self.total_are = self.living_area + self.garden_area
 
     total_are = fields.Integer(string="Total Area")
 
@@ -62,12 +62,15 @@ class Property(models.Model):
     def action_cancel(self):
         self.state = 'canceled'
 
+    offer_count = fields.Integer(string="Offer Count", compute="_compute_offer_count")
+
     @api.depends('offer_ids')
     def _compute_offer_count(self):
         for rec in self:
-            self.offer_count = len(rec.offer_ids)
-
-    offer_count = fields.Integer(string="Offer Count", compute=_compute_offer_count)
+            if rec.offer_ids:
+                rec.offer_count = len(rec.offer_ids)
+            else:
+                rec.offer_count = 0
 
     @api.depends('offer_ids')
     def _compute_best_price(self):
@@ -78,12 +81,12 @@ class Property(models.Model):
                 rec.best_offer = 0
 
 
-
 class PropertyType(models.Model):
     _name = "estate.property.type"
     _description = "Property Type"
 
     name = fields.Char(string="Name", required=True)
+
 
 class PropertyTag(models.Model):
     _name = "estate.property.tag"
