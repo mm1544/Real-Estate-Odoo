@@ -1,0 +1,11 @@
+<!--QWEB template-->
+<templates>
+    <!-- Will be used in 'my_custom_tag.js -->
+    <t t-name="CustomActions">
+        <div>
+            <h3>
+                Custom Actions
+            </h3>
+        </div>
+    </t>
+</templates>

@@ -40,7 +40,7 @@
                     <field name="expected_price" type="measure"/>
                     <field name="facades" type="measure"/>
                     <field name="bedrooms" type="measure"/>
-<!--                    <field name="state" type="col"/>-->
+                    <!--                    <field name="state" type="col"/>-->
                 </pivot>
             </field>
         </record>
@@ -77,9 +77,9 @@
                     <group expand="0" string="Group By">
                         <filter string="Status" name="group_by_state" context="{'group_by': 'state'}"/>
                     </group>
-<!--                    <searchpanel>-->
-<!--                        <field name="state" icon="fa-filter" groupby="group_by_state" limit="0"/>-->
-<!--                    </searchpanel>-->
+                    <!--                    <searchpanel>-->
+                    <!--                        <field name="state" icon="fa-filter" groupby="group_by_state" limit="0"/>-->
+                    <!--                    </searchpanel>-->
                 </search>
             </field>
         </record>
@@ -89,7 +89,8 @@
             <field name="name">estate.property.kanban</field>
             <field name="model">estate.property</field>
             <field name="arch" type="xml">
-                <kanban default_group_by="state" on_create="quick_create" quick_create_view="real_estate_ads.quick_create_estate_property_form_view">
+                <kanban default_group_by="state" on_create="quick_create"
+                        quick_create_view="real_estate_ads.quick_create_estate_property_form_view">
                     <field name="name"/>
                     <field name="state"/>
                     <field name="postcode"/>
@@ -103,11 +104,13 @@
                                         <field name="name"/>
                                     </strong>
                                     <div class="o_kanban_tags_section">
-                                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                        <field name="tag_ids" widget="many2many_tags"
+                                               options="{'color_field': 'color'}"/>
                                     </div>
                                     <div class="o_kanban_record_button">
                                         <div class="oe_kanban_button_left">
-                                            <field name="offer_count"/> Offer(s)
+                                            <field name="offer_count"/>
+                                            Offer(s)
                                         </div>
                                     </div>
                                 </div>
@@ -136,7 +139,8 @@
             <field name="name">estate.property.calendar</field>
             <field name="model">estate.property</field>
             <field name="arch" type="xml">
-                <calendar date_start="date_availability" string="Properties" mode="month" event_open_popup="true" quick_add="false">
+                <calendar date_start="date_availability" string="Properties" mode="month" event_open_popup="true"
+                          quick_add="false">
                     <field name="name"/>
                     <field name="date_availability"/>
                     <field name="postcode"/>
@@ -161,9 +165,16 @@
                     <sheet>
                         <!-- Smart buttons -->
                         <div class="oe_button_box" name="button_box">
-                            <button class="oe_stat_button" name="%(real_estate_ads.action_property_offer_view)d" type="action" icon="fa-handshake-o">
+                            <button class="oe_stat_button" name="%(real_estate_ads.action_property_offer_view)d"
+                                    type="action" icon="fa-handshake-o">
                                 <field name="offer_count" string="Offers" widget="statinfo"/>
                             </button>
+                            <!--                            <button class="oe_stat_button" name="action_property_view_offers" type="object" icon="fa-handshake-o">-->
+                            <!--                                <field name="offer_count" string="Offers" widget="statinfo"/>-->
+                            <!--                            </button>-->
+                            <!--                            <button class="oe_stat_button" name="action_client_action" type="object" icon="fa-handshake-o">-->
+                            <!--                                <field name="offer_count" string="Testing Client Action" widget="statinfo"/>-->
+                            <!--                            </button>-->
                         </div>
                         <group>
                             <field name="name" widget="char_emojis" placeholder="Property Name"/>
@@ -171,7 +182,7 @@
                             <group>
                                 <field name="property_type_id"/>
                                 <field name="postcode"/>
-<!--                                <field name="postcode" password="True"/>-->
+                                <!--                                <field name="postcode" password="True"/>-->
                                 <field name="date_availability"/>
                             </group>
                             <group>
@@ -189,30 +200,35 @@
                                     <field name="facades"/>
                                     <field name="garage" widget="boolean_toggle"/>
                                     <field name="garden"/>
-                                    <field name="garden_area" attrs="{'invisible': [('garden', '=', False)], 'readonly': [('garden', '=', True)]}"/>
-<!--                                    <field name="garden_orientation" attrs="{'invisible': [('garden', '=', False)]}" widget="radio"/>-->
-                                    <field name="garden_orientation" attrs="{'invisible': [('garden', '=', False)]}" widget="selection_badge"/>
+                                    <field name="garden_area"
+                                           attrs="{'invisible': [('garden', '=', False)], 'readonly': [('garden', '=', True)]}"/>
+                                    <!--                                    <field name="garden_orientation" attrs="{'invisible': [('garden', '=', False)]}" widget="radio"/>-->
+                                    <field name="garden_orientation" attrs="{'invisible': [('garden', '=', False)]}"
+                                           widget="selection_badge"/>
                                     <field name="total_are"/>
                                 </group>
                             </page>
                             <page string="Offers">
-                               <field name="offer_ids">
-                                  <tree editable="bottom" decoration-success="status == 'accepted'" decoration-danger="status == 'refused'">
-                                      <field name="price"/>
-                                      <field name="partner_id"/>
-                                      <field name="creation_date" invisible="1"/>
-                                      <field name="validity"/>
-                                      <field name="deadline" widget="remaining_days"/>
-                                      <field name="status" readonly="1"/>
-                                      <!-- Methods action_accept_offer and action_decline_offer will be created on property_offer model   -->
-                                      <button name="action_accept_offer" type="object" icon="fa-check" string="Accept"/>
-                                      <button name="action_decline_offer" type="object" icon="fa-times" string="Decline"/>
-                                  </tree>
-                               </field>
+                                <field name="offer_ids">
+                                    <tree editable="bottom" decoration-success="status == 'accepted'"
+                                          decoration-danger="status == 'refused'">
+                                        <field name="price"/>
+                                        <field name="partner_id"/>
+                                        <field name="creation_date" invisible="1"/>
+                                        <field name="validity"/>
+                                        <field name="deadline" widget="remaining_days"/>
+                                        <field name="status" readonly="1"/>
+                                        <!-- Methods action_accept_offer and action_decline_offer will be created on property_offer model   -->
+                                        <button name="action_accept_offer" type="object" icon="fa-check"
+                                                string="Accept"/>
+                                        <button name="action_decline_offer" type="object" icon="fa-times"
+                                                string="Decline"/>
+                                    </tree>
+                                </field>
                             </page>
                             <page string="Other Info">
                                 <group>
-<!--                                    <field name="sales_id" widget="many2one_avatar_user"/>-->
+                                    <!--                                    <field name="sales_id" widget="many2one_avatar_user"/>-->
                                     <field name="sales_id" widget="many2one_avatar_employee"/>
                                     <field name="buyer_id"/>
                                     <field name="phone" widget="phone"/>
@@ -235,6 +251,13 @@
                     Create a Property to Advertise
                 </p>
             </field>
+        </record>
+
+        <!-- Custom Client Action -->
+        <record id="action_custom_client_action" model="ir.actions.client">
+            <field name="name">Custom Client Action</field>
+            <!-- Will create a widget for this Tag -->
+            <field name="tag">custom_client_action</field>
         </record>
     </data>
 </odoo>

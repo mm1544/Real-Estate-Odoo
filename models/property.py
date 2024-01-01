@@ -1,4 +1,4 @@
-from odoo import fields, models, api
+from odoo import fields, models, api, _
 
 
 class Property(models.Model):
@@ -79,6 +79,23 @@ class Property(models.Model):
                 rec.best_offer = max(rec.offer_ids.mapped('price'))
             else:
                 rec.best_offer = 0
+
+    # def action_client_action(self):
+    #     """For use in Client Action"""
+    #     return {
+    #         'type': 'ir.actions.client',
+    #         # Tag 'reload' already has a widget. Accessing it out of the box.
+    #         'tag': 'display_notification',
+    #         'params': {
+    #             'title': _('Testing Client Action notification.'),
+    #             # success, warning, danger
+    #             'type': 'success',
+    #             'sticky': False,
+    #         }
+    #
+    #         # 'tag': 'reload',
+    #         #     'tag': 'apps'
+    #     }
 
 
 class PropertyType(models.Model):
