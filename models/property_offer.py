@@ -94,6 +94,13 @@ class PropertyOffer(models.Model):
                 'state': 'received',
             })
 
+    def extend_offer_deadline(self):
+        active_ids = self._context.get('active_ids')
+        if active_ids:
+            offer_ids = self.env['estate.property.offer'].browse(active_ids)
+            for offer in offer_ids:
+                offer.validity = 10
+
 
     # def write(self, vals):
     #     return super(PropertyOffer, self).write(vals)
