@@ -101,6 +101,11 @@ class PropertyOffer(models.Model):
             for offer in offer_ids:
                 offer.validity = 10
 
+    def _extend_offer_deadline(self):
+        offer_ids = self.env['estate.property.offer'].search([])
+        for offer in offer_ids:
+            offer.validity = offer.validity + 1
+
 
     # def write(self, vals):
     #     return super(PropertyOffer, self).write(vals)
