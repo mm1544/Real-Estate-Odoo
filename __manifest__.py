@@ -22,8 +22,12 @@
         "views/menu_items.xml",
 
         # Data Files
-        # 'data/property_type.xml'
-        'data/estate.property.type.csv'
+        # 'data/property_type.xml',
+        'data/estate.property.type.csv',
+        
+        # Report
+        'report/report_template.xml',
+        'report/property_report.xml',
     ],
     "demo": [
         "demo/property_tag.xml"

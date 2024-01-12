@@ -169,6 +169,10 @@
                                     type="action" icon="fa-handshake-o">
                                 <field name="offer_count" string="Offers" widget="statinfo"/>
                             </button>
+<!--                            <button class="oe_stat_button" name="action_url_action"-->
+<!--                                    type="object" icon="fa-handshake-o">-->
+<!--                                <field name="offer_count" string="Go To Website" widget="statinfo"/>-->
+<!--                            </button>-->
                             <!--                            <button class="oe_stat_button" name="action_property_view_offers" type="object" icon="fa-handshake-o">-->
                             <!--                                <field name="offer_count" string="Offers" widget="statinfo"/>-->
                             <!--                            </button>-->
@@ -287,6 +291,5 @@
             <!--  'active' is True by default' -->
             <!--  <field name="acitve" eval="False"/> -->
         </record>
-
     </data>
 </odoo>

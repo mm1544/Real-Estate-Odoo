@@ -64,6 +64,15 @@ class Property(models.Model):
 
     offer_count = fields.Integer(string="Offer Count", compute="_compute_offer_count")
 
+    def action_property_view_offers(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': f"{self.name} - Offers",
+            'domain': [('property_id', '=', self.id)],
+            'view_mode': 'tree',
+            'res_model': 'estate.property.offer',
+        }
+
     @api.depends('offer_ids')
     def _compute_offer_count(self):
         for rec in self:
@@ -79,6 +88,25 @@ class Property(models.Model):
                 rec.best_offer = max(rec.offer_ids.mapped('price'))
             else:
                 rec.best_offer = 0
+
+    # def action_url_action(self):
+    #     """
+    #     URL Action
+    #     """
+    #     return {
+    #         'type': 'ir.actions.act_url',
+    #         'url': 'https://odoo.com',
+    #         # When 'self' website opens on the same page.
+    #         # 'target': 'self',
+    #         'target': 'new',
+    #     }
+
+    def _get_report_base_filename(self):
+        # To make sure just one record is obtained
+        self.ensure_one()
+        return 'Estate Property - %s' % self.name
+
+
 
     # def action_client_action(self):
     #     """For use in Client Action"""
@@ -96,6 +124,8 @@ class Property(models.Model):
     #         # 'tag': 'reload',
     #         #     'tag': 'apps'
     #     }
+
+
 
 
 class PropertyType(models.Model):
