@@ -2,8 +2,10 @@ from odoo import fields, models, api, _
 
 
 class Property(models.Model):
-    # This is a table name in DB wil be set to estate_property
+    # This is a table name in DB will be set to estate_property
     _name = "estate.property"
+    # Adding Mixin
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'website.published.mixin', 'website.seo.metadata']
     _description = "Estate Properties"
 
     name = fields.Char(string="Name", required=True)
@@ -13,13 +15,13 @@ class Property(models.Model):
         ('accepted', 'Offer Accepted'),
         ('sold', 'Sold'),
         ('canceled', 'Canceled')],
-        default='new', string='Status')
+        default='new', string='Status', group_expand='_expand_state')
     tag_ids = fields.Many2many("estate.property.tag", string="Property Tag")
     property_type_id = fields.Many2one("estate.property.type", string="Property Type")
     description = fields.Text(string="Description")
     postcode = fields.Char(string="Postcode")
     date_availability = fields.Date(string="Available From")
-    expected_price = fields.Float(string="Expected Price")
+    expected_price = fields.Float(string="Expected Price", tracking=True)
     best_offer = fields.Float(string="Best Offer", compute="_compute_best_price")
     selling_price = fields.Float(string="Selling Price", readonly=True)
     bedrooms = fields.Integer(string="Bedrooms")
@@ -106,8 +108,6 @@ class Property(models.Model):
         self.ensure_one()
         return 'Estate Property - %s' % self.name
 
-
-
     # def action_client_action(self):
     #     """For use in Client Action"""
     #     return {
@@ -125,7 +125,23 @@ class Property(models.Model):
     #         #     'tag': 'apps'
     #     }
 
+    def _compute_website_url(self):
+        for rec in self:
+            rec.website_url = "/properties/%s" % rec.id
 
+    def action_send_email(self):
+        mail_template = self.env.ref('real_estate_ads.mail_template')
+        mail_template.send_mail(self.id, force_send=True)
+
+    def _get_emails(self):
+        # "self.offer_ids.mapped('partner_email')" returns list
+        return ','.join(self.offer_ids.mapped('partner_email'))
+
+    def _expand_state(self, states, domain, order):
+        return [
+            # Expanding selection field
+            key for key, dummy in type(self).state.selection
+        ]
 
 
 class PropertyType(models.Model):

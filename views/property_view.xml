@@ -89,6 +89,8 @@
             <field name="name">estate.property.kanban</field>
             <field name="model">estate.property</field>
             <field name="arch" type="xml">
+<!--                <kanban default_group_by="state" on_create="quick_create"-->
+<!--                        quick_create_view="real_estate_ads.quick_create_estate_property_form_view">-->
                 <kanban default_group_by="state" on_create="quick_create"
                         quick_create_view="real_estate_ads.quick_create_estate_property_form_view">
                     <field name="name"/>
@@ -125,6 +127,7 @@
         <record id="quick_create_estate_property_form_view" model="ir.ui.view">
             <field name="name">estate.property.form</field>
             <field name="model">estate.property</field>
+            <field name="priority">1000</field>
             <field name="arch" type="xml">
                 <form>
                     <group>
@@ -159,6 +162,7 @@
                         <!-- When type=object, then name is a method in model.      -->
                         <button name="action_sold" type="object" string="Sold" class="btn btn-primary"/>
                         <button name="action_cancel" type="object" string="Cancel" class="btn btn-danger"/>
+                        <button name="action_send_email" type="object" string="Send Email" class="btn btn-danger"/>
                         <field name="state" widget="statusbar"/>
                         <!--  <field name="state" widget="statusbar" status_visible="new,received"/>-->
                     </header>
@@ -168,6 +172,10 @@
                             <button class="oe_stat_button" name="%(real_estate_ads.action_property_offer_view)d"
                                     type="action" icon="fa-handshake-o">
                                 <field name="offer_count" string="Offers" widget="statinfo"/>
+                            </button>
+                            <button class="oe_stat_button" name="website_publish_button"
+                                    type="object" icon="fa-globe">
+                                <field name="is_published" widget="website_publish_button"/>
                             </button>
 <!--                            <button class="oe_stat_button" name="action_url_action"-->
 <!--                                    type="object" icon="fa-handshake-o">-->
@@ -240,6 +248,11 @@
                             </page>
                         </notebook>
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
                 </form>
             </field>
         </record>
