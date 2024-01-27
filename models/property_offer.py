@@ -19,7 +19,7 @@ class PropertyOffer(models.Model):
                 rec.name = False
 
     name = fields.Char(string="Description", compute=_compute_name)
-    price = fields.Float(string="Price")
+    price = fields.Monetary(string="Price")
     status = fields.Selection(
         [('accepted', 'Accepted'), ('refused', 'Refused')],
         string="Status")
@@ -28,6 +28,8 @@ class PropertyOffer(models.Model):
     property_id = fields.Many2one('estate.property', string="Property")
     validity = fields.Integer(string="Validity")
     deadline = fields.Date(string="Deadline", compute="_compute_deadline", inverse="_inverse_deadline")
+    currency_id = fields.Many2one("res.currency", string="Currency",
+                                  default=lambda self: self.env.user.company_id.currency_id)
 
     # Decorator @api.model
     @api.model
@@ -84,7 +86,6 @@ class PropertyOffer(models.Model):
         if offer_ids:
             raise ValidationError("You have already accepted an offer.")
 
-
     # Refuse offer
     def action_decline_offer(self):
         self.status = 'refused'
@@ -107,10 +108,8 @@ class PropertyOffer(models.Model):
         for offer in offer_ids:
             offer.validity = offer.validity + 1
 
-
     # def write(self, vals):
     #     return super(PropertyOffer, self).write(vals)
-
 
     # # Decorator e.g. 3
     # @api.model_create_multi

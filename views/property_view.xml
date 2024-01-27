@@ -19,9 +19,10 @@
                     <field name="property_type_id"/>
                     <field name="postcode"/>
                     <field name="date_availability"/>
-                    <field name="expected_price"/>
-                    <field name="best_offer"/>
-                    <field name="selling_price"/>
+                    <field name="expected_price" widget="monetary"/>
+                    <field name="best_offer" widget="monetary"/>
+                    <field name="selling_price" widget="monetary"/>
+                    <field name="currency_id" invisible="1"/>
                     <field name="state" widget="badge"/>
                 </tree>
             </field>
@@ -89,8 +90,8 @@
             <field name="name">estate.property.kanban</field>
             <field name="model">estate.property</field>
             <field name="arch" type="xml">
-<!--                <kanban default_group_by="state" on_create="quick_create"-->
-<!--                        quick_create_view="real_estate_ads.quick_create_estate_property_form_view">-->
+                <!--                <kanban default_group_by="state" on_create="quick_create"-->
+                <!--                        quick_create_view="real_estate_ads.quick_create_estate_property_form_view">-->
                 <kanban default_group_by="state" on_create="quick_create"
                         quick_create_view="real_estate_ads.quick_create_estate_property_form_view">
                     <field name="name"/>
@@ -177,10 +178,10 @@
                                     type="object" icon="fa-globe">
                                 <field name="is_published" widget="website_publish_button"/>
                             </button>
-<!--                            <button class="oe_stat_button" name="action_url_action"-->
-<!--                                    type="object" icon="fa-handshake-o">-->
-<!--                                <field name="offer_count" string="Go To Website" widget="statinfo"/>-->
-<!--                            </button>-->
+                            <!--                            <button class="oe_stat_button" name="action_url_action"-->
+                            <!--                                    type="object" icon="fa-handshake-o">-->
+                            <!--                                <field name="offer_count" string="Go To Website" widget="statinfo"/>-->
+                            <!--                            </button>-->
                             <!--                            <button class="oe_stat_button" name="action_property_view_offers" type="object" icon="fa-handshake-o">-->
                             <!--                                <field name="offer_count" string="Offers" widget="statinfo"/>-->
                             <!--                            </button>-->
@@ -198,9 +199,11 @@
                                 <field name="date_availability"/>
                             </group>
                             <group>
-                                <field name="expected_price" groups="real_estate_ads.group_property_manager"/>
-                                <field name="best_offer"/>
-                                <field name="selling_price"/>
+                                <field name="expected_price" groups="real_estate_ads.group_property_manager"
+                                       widget="monetary"/>
+                                <field name="best_offer" widget="monetary"/>
+                                <field name="selling_price" widget="monetary"/>
+                                <field name="currency_id" invisible="1"/>
                             </group>
                         </group>
                         <notebook>
@@ -225,6 +228,7 @@
                                     <tree editable="bottom" decoration-success="status == 'accepted'"
                                           decoration-danger="status == 'refused'">
                                         <field name="price"/>
+                                        <field name="currency_id" invisible="1"/>
                                         <field name="partner_id"/>
                                         <field name="creation_date" invisible="1"/>
                                         <field name="validity"/>
