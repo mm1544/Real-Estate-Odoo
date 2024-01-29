@@ -20,6 +20,7 @@
         "views/property_tag_view.xml",
         "views/property_offer_view.xml",
         "views/menu_items.xml",
+        "views/property_web_template.xml",
 
         # Data Files
         # 'data/property_type.xml',
